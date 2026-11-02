@@ -1,0 +1,29 @@
+name: Build OutRun 944 Mega Drive ROM
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download game source
+        uses: actions/checkout@v4
+
+      - name: Compile Mega Drive ROM
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            zerasul/sgdk:2.00
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: OutRun-944-Mega-Drive
+          path: |
+            out/rom.bin
+            out/release/rom.bin
+          if-no-files-found: error
